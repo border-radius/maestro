@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Word {
+  id Int @id @default(autoincrement())
+  value String @unique
+  fromLink Link[] @relation("fromRelation")
+  toLink Link[] @relation("toRelation")
+}
+
+model Link {
+  id Int @id @default(autoincrement())
+  from Word? @relation("fromRelation", fields: [fromId], references: [id])
+  fromId Int?
+  to Word? @relation("toRelation", fields: [toId], references: [id])
+  toId Int?
+  count Int
+}
